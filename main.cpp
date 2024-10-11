@@ -11,6 +11,9 @@
 #include "FacadeMode/Facade.h"
 #include "FlyweightMode/Flyweight.h"
 #include "CompositeMode/Composite.h"
+#include "TemplateMode/Template.h"
+#include "StrategyMode/Strategy.h"
+#include "CommandMode/Command.h"
 #include <vector>
 
 void TestSingletonMode() {
@@ -158,7 +161,36 @@ void TestCompositeMode(){
     PrintValue(box);
 }
 
+//模版模式
+//通过统一的接口来实现具体业务的不同实现方法
+void TestTemplateMode(){
+    std::unique_ptr<TemplateMode::Procession> procession(new TemplateMode::Business);
+    procession->Process();
+}
+
+//策略模式
+//动态更换调用的策略：例如游戏中针对不同角色，采用不同的攻击策略或者不同的角色信息
+//unique_ptr需要显式调用类对象的构造函数，否则是空指针
+void TestStrategyMode(){
+    std::unique_ptr<StrategyMode::StrategyTest> strategyTest(new StrategyMode::StrategyTest());
+    strategyTest->Set(StrategyMode::strategy::APC);
+    strategyTest->Execution();
+    strategyTest->Set(StrategyMode::strategy::ADC);
+    strategyTest->Execution();
+}
+
+//  命令模式测试
+//  通过对象的形式传入具体的命令交互，然后命令的执行并不需要判断命令的类型，降低系统的耦合度
+//  增加和删除命令不会影响到其他类的变化，便于扩展
+void TestCommandMode(){
+    std::unique_ptr<CommandMode::Server> server(new CommandMode::Server());
+    server->PushCommand(new CommandMode::AbstractCommand());
+    server->PushCommand(new CommandMode::AddCommand());
+    server->PushCommand(new CommandMode::SubCommand());
+    server->Handle();
+}
+
 int main() {
-    TestCompositeMode();
+    TestCommandMode();
     return 0;
 }
